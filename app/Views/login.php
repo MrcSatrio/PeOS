@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Restaurant Order System | Sign In & Register</title>
+    <title>Retro Billiard | Staff Terminal &amp; POS Sign In</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
         <div class="auth-card">
 
             <!-- =========================================================
-                 LEFT PANEL: Food Showcase & Retro Aesthetic (Bjorbun style)
+                 LEFT PANEL: Operational Showcase & Retro Aesthetic
                  ========================================================= -->
             <section class="showcase-panel">
                 <header class="showcase-header">
@@ -55,8 +55,7 @@
                         Served with <span>Passion</span>.
                     </h2>
                     <p class="showcase-subtext" data-i18n="hero_subtext">
-                        Welcome to our online ordering portal. Order your favorite gourmet dishes directly from your
-                        table or pick up fresh from the kitchen.
+                        Welcome to our online ordering portal. Order your favorite gourmet dishes directly from your table or pick up fresh from the kitchen.
                     </p>
 
                     <div class="organic-showcase-notes">
@@ -84,11 +83,11 @@
             </section>
 
             <!-- =========================================================
-                 RIGHT PANEL: Authentication Forms (Structure from Image #4)
+                 RIGHT PANEL: Staff Authentication Terminal
                  ========================================================= -->
             <section class="form-panel">
 
-                <!-- Language Switcher Bar (Top Right above tabs) -->
+                <!-- Top Utility Bar: Language Switcher -->
                 <div class="lang-bar">
                     <div class="lang-switch-dropdown" id="lang-menu">
                         <button type="button" class="lang-toggle-btn" id="lang-btn" aria-haspopup="true" aria-expanded="false" title="Switch Language / Ganti Bahasa">
@@ -138,31 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Tab switcher between Sign In and Register -->
-                <nav class="auth-switch-nav" role="tablist" aria-label="Authentication Options">
-                    <button type="button" class="switch-btn active" id="tab-login" role="tab" aria-selected="true"
-                        aria-controls="view-login">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                            <polyline points="10 17 15 12 10 7"></polyline>
-                            <line x1="15" y1="12" x2="3" y2="12"></line>
-                        </svg>
-                        <span data-i18n="tab_signin">Sign In</span>
-                    </button>
-                    <button type="button" class="switch-btn" id="tab-register" role="tab" aria-selected="false"
-                        aria-controls="view-register">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
-                        <span data-i18n="tab_register">Register</span>
-                    </button>
-                </nav>
-
                 <!-- Flash feedback message placeholders (ready for backend) -->
                 <?php if (session()->getFlashdata('error')): ?>
                     <div class="alert-box alert-danger" role="alert">
@@ -188,216 +162,93 @@
                 <?php endif; ?>
 
                 <div class="form-view-container">
+                    <header class="form-header">
+                        <h2 class="form-title" data-i18n="login_title">Staff Sign In</h2>
+                        <p class="form-subtitle" data-i18n="login_subtitle">Enter your staff credentials to access your terminal shift.</p>
+                    </header>
 
-                    <!-- =====================================
-                         VIEW 1: LOGIN FORM
-                         ===================================== -->
-                    <div class="form-view active" id="view-login" role="tabpanel" aria-labelledby="tab-login">
-                        <header class="form-header">
-                            <h2 class="form-title" data-i18n="login_title">Welcome Back!</h2>
-                            <p class="form-subtitle" data-i18n="login_subtitle">Log in below to start ordering or manage your table.</p>
-                        </header>
+                    <form action="<?= base_url('login') ?>" method="post" id="form-login" novalidate>
+                        <?= csrf_field() ?>
 
-                        <form action="<?= base_url('login') ?>" method="post" id="form-login" novalidate>
-                            <?= csrf_field() ?>
-
-                            <!-- Username Field -->
-                            <div class="form-group">
-                                <label for="login-username" class="input-label" data-i18n="label_username">Username</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                    <input type="text" name="username" id="login-username" class="form-input"
-                                        placeholder="Enter your username" data-i18n-placeholder="placeholder_username" autocomplete="username">
-                                </div>
-                                <span class="field-error" id="error-login-username"></span>
-                            </div>
-
-                            <!-- Password Field -->
-                            <div class="form-group">
-                                <label for="login-password" class="input-label" data-i18n="label_password">Password</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                    </svg>
-                                    <input type="password" name="password" id="login-password" class="form-input"
-                                        placeholder="••••••••••••" data-i18n-placeholder="placeholder_password" autocomplete="current-password">
-                                    <button type="button" class="password-toggle-btn" data-target="login-password"
-                                        aria-label="Toggle password visibility">
-                                        <!-- Eye icon -->
-                                        <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        <!-- Eye off icon -->
-                                        <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            style="display: none;">
-                                            <path
-                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
-                                            </path>
-                                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <span class="field-error" id="error-login-password"></span>
-                            </div>
-
-                            <!-- Form Auxiliaries -->
-                            <div class="form-aux">
-                                <label class="remember-label">
-                                    <input type="checkbox" name="remember">
-                                    <span data-i18n="remember_me">Remember Me</span>
-                                </label>
-                                <a href="#" class="text-link" data-i18n="forgot_password">Forgot Password?</a>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn-submit">
-                                <span data-i18n="btn_signin">Sign In</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
+                        <!-- Username / Staff ID Field -->
+                        <div class="form-group">
+                            <label for="login-username" class="input-label" data-i18n="label_username">Staff ID or Username</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                            </button>
-
-                            <p class="switch-hint">
-                                <span data-i18n="no_account">Don't have an account yet?</span>
-                                <button type="button" id="link-to-register" data-i18n="register_free">Register for free</button>
-                            </p>
-                        </form>
-                    </div>
-
-                    <!-- =====================================
-                         VIEW 2: REGISTER FORM
-                         ===================================== -->
-                    <div class="form-view" id="view-register" role="tabpanel" aria-labelledby="tab-register">
-                        <header class="form-header">
-                            <h2 class="form-title" data-i18n="reg_title">Join The Club!</h2>
-                            <p class="form-subtitle" data-i18n="reg_subtitle">Create an account to order food, save favorites &amp; earn points.
-                            </p>
-                        </header>
-
-                        <form action="<?= base_url('register') ?>" method="post" id="form-register" novalidate>
-                            <?= csrf_field() ?>
-
-                            <!-- Username Field -->
-                            <div class="form-group">
-                                <label for="reg-username" class="input-label" data-i18n="label_username">Username</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                    <input type="text" name="username" id="reg-username" class="form-input"
-                                        placeholder="Pick a unique username" data-i18n-placeholder="placeholder_reg_username" autocomplete="username">
-                                </div>
-                                <span class="field-error" id="error-reg-username"></span>
+                                <input type="text" name="username" id="login-username" class="form-input"
+                                    placeholder="Enter your staff ID or username" data-i18n-placeholder="placeholder_username" autocomplete="username">
                             </div>
+                            <span class="field-error" id="error-login-username"></span>
+                        </div>
 
-                            <!-- Password Field -->
-                            <div class="form-group">
-                                <label for="reg-password" class="input-label" data-i18n="label_password">Password</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                    </svg>
-                                    <input type="password" name="password" id="reg-password" class="form-input"
-                                        placeholder="Minimum 8 characters" data-i18n-placeholder="placeholder_reg_password" autocomplete="new-password">
-                                    <button type="button" class="password-toggle-btn" data-target="reg-password"
-                                        aria-label="Toggle password visibility">
-                                        <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            style="display: none;">
-                                            <path
-                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
-                                            </path>
-                                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <span class="field-error" id="error-reg-password"></span>
-                            </div>
-
-                            <!-- Confirm Password Field -->
-                            <div class="form-group">
-                                <label for="reg-confirm-password" class="input-label" data-i18n="label_confirm_password">Confirm Password</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                    <input type="password" name="confirm_password" id="reg-confirm-password"
-                                        class="form-input" placeholder="Repeat your password" data-i18n-placeholder="placeholder_reg_confirm"
-                                        autocomplete="new-password">
-                                    <button type="button" class="password-toggle-btn" data-target="reg-confirm-password"
-                                        aria-label="Toggle password visibility">
-                                        <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            style="display: none;">
-                                            <path
-                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
-                                            </path>
-                                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <span class="field-error" id="error-reg-confirm-password"></span>
-                                <div id="confirm-feedback"
-                                    style="display:none; font-size: 0.8rem; font-weight: 700; margin-top: 5px;"></div>
-                            </div>
-
-                            <!-- Terms & Privacy -->
-                            <div class="form-aux">
-                                <label class="remember-label">
-                                    <input type="checkbox" name="terms" required checked>
-                                    <span data-i18n-html="agree_terms">I agree to <a href="#" class="text-link">Terms &amp; Conditions</a></span>
-                                </label>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn-submit">
-                                <span data-i18n="btn_create_account">Create Account</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
+                        <!-- Password / PIN Field -->
+                        <div class="form-group">
+                            <label for="login-password" class="input-label" data-i18n="label_password">Password / PIN</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                            </button>
+                                <input type="password" name="password" id="login-password" class="form-input"
+                                    placeholder="••••••••••••" data-i18n-placeholder="placeholder_password" autocomplete="current-password">
+                                <button type="button" class="password-toggle-btn" data-target="login-password"
+                                    aria-label="Toggle password visibility">
+                                    <!-- Eye icon -->
+                                    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <!-- Eye off icon -->
+                                    <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        style="display: none;">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                        </path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="field-error" id="error-login-password"></span>
+                        </div>
 
-                            <p class="switch-hint">
-                                <span data-i18n="have_account">Already have an account?</span>
-                                <button type="button" id="link-to-login" data-i18n="signin_here">Sign in here</button>
-                            </p>
-                        </form>
-                    </div>
+                        <!-- Form Auxiliaries -->
+                        <div class="form-aux">
+                            <label class="remember-label">
+                                <input type="checkbox" name="remember">
+                                <span data-i18n="remember_me">Keep me signed in this shift</span>
+                            </label>
+                            <a href="#" class="text-link" data-i18n="forgot_password">Forgot PIN?</a>
+                        </div>
 
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-submit">
+                            <span data-i18n="btn_signin">Sign In to Terminal</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
 
-                <div class="staff-note">
-                    <span data-i18n="staff_question">Are you a kitchen or front-of-house staff member?</span>
-                    <br><strong data-i18n="staff_action">Use your Assigned POS Terminal or PIN</strong>
+                <!-- Security & Supervisor Note -->
+                <div class="staff-security-note">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <div class="security-text">
+                        <span data-i18n="staff_notice">Restricted access for authorized restaurant staff only.</span>
+                        <div data-i18n-html="staff_help">Need credentials or a PIN reset? Contact your <strong>Shift Supervisor</strong>.</div>
+                    </div>
                 </div>
 
             </section>

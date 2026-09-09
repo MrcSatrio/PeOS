@@ -8,4 +8,15 @@ class Home extends BaseController
     {
         return view('login');
     }
+
+    public function pos(): string
+    {
+        return view('pos');
+    }
+
+    public function login()
+    {
+        // When staff signs in, redirect to the cashier / POS reception terminal
+        return redirect()->to(base_url('pos'));
+    }
 }
