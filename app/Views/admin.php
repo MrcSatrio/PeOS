@@ -152,28 +152,6 @@
                  LEFT RAIL: Registry Ledger & Low Stock Watchlist
                  ========================================================= -->
             <aside class="admin-sidebar-rail">
-                <!-- Vintage Register / Ledger Summary Box -->
-                <div class="ledger-box">
-                    <div class="ledger-header">
-                        <span class="ledger-stamp">LEDGER</span>
-                        <h3 class="ledger-title" data-i18n="ledger_title">Registry Summary</h3>
-                    </div>
-                    <div class="ledger-rows">
-                        <div class="ledger-row">
-                            <span class="ledger-label" data-i18n="stat_total_dishes">Menu Dishes</span>
-                            <strong class="ledger-val" id="stat-total-items">16</strong>
-                        </div>
-                        <div class="ledger-row">
-                            <span class="ledger-label" data-i18n="stat_staff_count">On-Duty Staff</span>
-                            <strong class="ledger-val" id="stat-total-users"><?= count($users) ?></strong>
-                        </div>
-                        <div class="ledger-row ledger-highlight">
-                            <span class="ledger-label" data-i18n="stat_inventory_value">Est. Inventory</span>
-                            <strong class="ledger-val-gold" id="stat-inventory-value">Rp 0</strong>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Interactive Low Stock Watchlist Feed -->
                 <div class="watchlist-card">
                     <div class="watchlist-header">

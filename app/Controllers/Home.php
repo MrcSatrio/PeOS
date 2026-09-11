@@ -11,7 +11,7 @@ class Home extends BaseController
 
     public function pos(): string
     {
-        return view('pos');
+        return view('cashier');
     }
 
     public function login()

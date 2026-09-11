@@ -26,14 +26,6 @@
         <header class="pos-header">
             <!-- Brand & Reception Identity -->
             <div class="header-brand-group">
-                <button type="button" class="header-icon-btn" id="btn-sidebar-toggle" aria-label="Navigation Menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-
                 <div class="pos-brand">
                     <img src="<?= base_url('images/logo.jpg') ?>" alt="Retro Billiard Logo" class="pos-brand-logo">
                     <div class="pos-brand-text">
@@ -57,18 +49,6 @@
 
             <!-- Cashier Meta, Language Switch & Action Controls -->
             <div class="header-actions-group">
-                <!-- Kitchen Queue Count Badge -->
-                <button type="button" class="kitchen-queue-btn" id="btn-kitchen-queue" title="View Kitchen Queue">
-                    <svg class="queue-svg-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                    </svg>
-                    <span class="queue-info">
-                        <strong id="queue-counter">12</strong>
-                        <small data-i18n="queue_label">Queue</small>
-                    </span>
-                </button>
-
                 <!-- Language Switcher Dropdown (EN / ID) -->
                 <div class="lang-switch-dropdown" id="lang-menu">
                     <button type="button" class="lang-toggle-btn" id="lang-btn" aria-haspopup="true" aria-expanded="false" title="Switch Language / Ganti Bahasa">
@@ -127,15 +107,6 @@
                         <span class="cashier-role" data-i18n="cashier_role">Head Cashier</span>
                     </div>
                 </div>
-
-                <!-- Admin Back Office Shortcut -->
-                <a href="<?= base_url('admin') ?>" class="header-admin-btn" title="Open Admin Back Office" data-i18n-title="admin_btn_title">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                    </svg>
-                    <span>Admin</span>
-                </a>
 
                 <!-- Logout / Exit Button -->
                 <a href="<?= base_url('logout') ?>" class="header-exit-btn" title="Exit / Switch Shift" data-i18n-title="exit_title">
