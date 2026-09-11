@@ -167,7 +167,7 @@
                         <p class="form-subtitle" data-i18n="login_subtitle">Enter your staff credentials to access your terminal shift.</p>
                     </header>
 
-                    <form action="<?= base_url('login') ?>" method="post" id="form-login" novalidate>
+                    <form action="<?= base_url('auth/action_login') ?>" method="post" id="form-login" novalidate>
                         <?= csrf_field() ?>
 
                         <!-- Username / Staff ID Field -->

@@ -56,7 +56,7 @@
                             <line x1="22" y1="11" x2="16" y2="11"></line>
                         </svg>
                         <span data-i18n="tab_user_mgmt">Cashier &amp; Staff</span>
-                        <span class="nav-count-badge" id="badge-users-count">4</span>
+                        <span class="nav-count-badge" id="badge-users-count"><?= count($users) ?></span>
                     </button>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                 </div>
 
                 <!-- Exit / Sign Out Button -->
-                <a href="<?= base_url('/') ?>" class="admin-exit-btn" title="Sign Out to Login" data-i18n-title="sign_out">
+                <a href="<?= base_url('logout') ?>" class="admin-exit-btn" title="Sign Out to Login" data-i18n-title="sign_out">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="ledger-row">
                             <span class="ledger-label" data-i18n="stat_staff_count">On-Duty Staff</span>
-                            <strong class="ledger-val" id="stat-total-users">4</strong>
+                            <strong class="ledger-val" id="stat-total-users"><?= count($users) ?></strong>
                         </div>
                         <div class="ledger-row ledger-highlight">
                             <span class="ledger-label" data-i18n="stat_inventory_value">Est. Inventory</span>
@@ -285,20 +285,14 @@
                             <div class="filter-pills" role="radiogroup" aria-label="Role Filters">
                                 <button type="button" class="filter-pill active" data-role="all">
                                     <span data-i18n="role_all">All Staff</span>
-                                    <span class="pill-badge" id="pill-count-role-all">4</span>
+                                    <span class="pill-badge" id="pill-count-role-all"><?= count($users) ?></span>
                                 </button>
-                                <button type="button" class="filter-pill" data-role="cashier">
-                                    <span data-i18n="role_cashier">Cashier</span>
-                                    <span class="pill-badge" id="pill-count-role-cashier">2</span>
-                                </button>
-                                <button type="button" class="filter-pill" data-role="head_cashier">
-                                    <span data-i18n="role_head_cashier">Head Cashier</span>
-                                    <span class="pill-badge" id="pill-count-role-head">1</span>
-                                </button>
-                                <button type="button" class="filter-pill" data-role="admin">
-                                    <span data-i18n="role_admin">Administrator</span>
-                                    <span class="pill-badge" id="pill-count-role-admin">1</span>
-                                </button>
+                                <?php foreach ($roles as $role): ?>
+                                    <button type="button" class="filter-pill" data-role="<?= esc($role['id_role']) ?>">
+                                        <span><?= esc($role['nama_role']) ?></span>
+                                        <span class="pill-badge"><?= count(array_filter($users, static fn ($user) => (int) $user['id_role'] === (int) $role['id_role'])) ?></span>
+                                    </button>
+                                <?php endforeach; ?>
                             </div>
 
                             <div class="canvas-actions-right">
@@ -322,13 +316,34 @@
                                         <th data-i18n="th_staff_name">Staff Member</th>
                                         <th style="width: 170px;" data-i18n="th_staff_id">Staff ID / Username</th>
                                         <th style="width: 160px;" data-i18n="th_role">Assigned Role</th>
-                                        <th style="width: 180px;" data-i18n="th_station">Station / Shift</th>
-                                        <th style="width: 130px;" data-i18n="th_status">Status</th>
                                         <th style="width: 160px; text-align: right;" data-i18n="th_actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-users-list">
-                                    <!-- Populated by admin.js -->
+                                    <?php foreach ($users as $user): ?>
+                                        <?php
+                                        $roleId = (int) $user['id_role'];
+                                        $roleKey = 'role-' . $roleId;
+                                        $roleName = $user['nama_role'] ?? ($roleId === 1 ? 'Administrator' : ($roleId === 2 ? 'Cashier' : 'Unknown'));
+                                        $initials = strtoupper(substr($user['username'], 0, 2));
+                                        ?>
+                                        <tr data-user-role="<?= esc($roleId) ?>" data-user-search="<?= esc(strtolower($user['username'] . ' ' . $roleName)) ?>">
+                                            <td><div class="staff-avatar-cell"><?= esc($initials) ?></div></td>
+                                            <td>
+                                                <div class="dish-cell-name">
+                                                    <span class="dish-main-title"><?= esc($user['username']) ?></span>
+                                                </div>
+                                            </td>
+                                            <td><span class="dish-id-badge" style="font-size: 0.82rem; color: var(--brand-900); font-weight: 700;"><?= esc($user['username']) ?></span></td>
+                                            <td><span class="role-badge <?= esc($roleKey) ?>"><?= esc($roleName) ?></span></td>
+                                            <td>
+                                                <div class="action-buttons-cell">
+                                                    <button type="button" class="btn-table-edit btn-edit-user" data-id="<?= esc($user['id_user']) ?>" title="Edit user">Edit</button>
+                                                    <button type="button" class="btn-table-delete btn-delete-user" data-id="<?= esc($user['id_user']) ?>" title="Delete user">✕</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
 
@@ -485,15 +500,6 @@
                 <input type="hidden" id="user-form-id" value="">
 
                 <div class="modal-body-grid">
-                    <!-- Full Staff Name -->
-                    <div class="form-group-retro span-full">
-                        <label for="user-full-name" class="retro-label">
-                            <span data-i18n="label_staff_name">Full Name</span>
-                            <span class="req">*</span>
-                        </label>
-                        <input type="text" id="user-full-name" class="retro-input" placeholder="e.g. Siti Rahmawati" required>
-                    </div>
-
                     <!-- Username / Staff ID -->
                     <div class="form-group-retro">
                         <label for="user-username" class="retro-label">
@@ -510,41 +516,22 @@
                             <span class="req">*</span>
                         </label>
                         <select id="user-role" class="retro-select" required>
-                            <option value="cashier" data-i18n="role_cashier">Cashier</option>
-                            <option value="head_cashier" data-i18n="role_head_cashier">Head Cashier</option>
-                            <option value="admin" data-i18n="role_admin">Administrator</option>
+                            <?php foreach ($roles as $role): ?>
+                                <option value="<?= esc($role['id_role']) ?>"><?= esc($role['nama_role']) ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
                     <!-- Password / PIN -->
                     <div class="form-group-retro">
                         <label for="user-pin" class="retro-label">
-                            <span data-i18n="label_pin">PIN / Password</span>
+                            <span data-i18n="label_pin">Password</span>
                             <span class="req" id="user-pin-req">*</span>
                         </label>
                         <input type="password" id="user-pin" class="retro-input" placeholder="••••••" minlength="4">
                         <small class="field-hint" id="pin-hint" data-i18n="pin_hint">4-6 digit numeric PIN or alphanumeric password.</small>
                     </div>
 
-                    <!-- Station / Shift Assignment -->
-                    <div class="form-group-retro">
-                        <label for="user-station" class="retro-label">
-                            <span data-i18n="label_station">Station / Shift</span>
-                        </label>
-                        <input type="text" id="user-station" class="retro-input" placeholder="e.g. Front Desk Terminal #01">
-                    </div>
-
-                    <!-- Account Status -->
-                    <div class="form-group-retro span-full">
-                        <label for="user-status" class="retro-label">
-                            <span data-i18n="label_status">Account Status</span>
-                        </label>
-                        <select id="user-status" class="retro-select">
-                            <option value="active" data-i18n="status_active">Active (Permitted to Sign In)</option>
-                            <option value="leave" data-i18n="status_leave">On Leave / Off Shift</option>
-                            <option value="inactive" data-i18n="status_inactive">Suspended / Inactive</option>
-                        </select>
-                    </div>
                 </div>
 
                 <footer class="modal-footer">
@@ -600,6 +587,16 @@
     <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
     <!-- Admin Logic JavaScript -->
+    <script>
+        window.baseUrl = <?= json_encode(rtrim(base_url(), '/') . '/') ?>;
+        window.adminUsers = <?= json_encode(array_map(static function (array $user): array {
+            return [
+                'id' => (string) $user['id_user'],
+                'username' => $user['username'],
+                'role' => (string) $user['id_role'],
+            ];
+        }, $users), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    </script>
     <script src="<?= base_url('js/admin.js') ?>"></script>
 </body>
 

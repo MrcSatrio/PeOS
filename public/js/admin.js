@@ -155,45 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  const DEFAULT_USERS = [
-    {
-      id: 'u1',
-      fullName: 'Novan Adrian',
-      username: 'cashier_novan',
-      role: 'head_cashier',
-      pin: '1234',
-      station: 'Front Desk #01 (Shift 1)',
-      status: 'active'
-    },
-    {
-      id: 'u2',
-      fullName: 'Siti Rahmawati',
-      username: 'cashier_siti',
-      role: 'cashier',
-      pin: '1234',
-      station: 'Terminal #02 (Shift 2)',
-      status: 'active'
-    },
-    {
-      id: 'u3',
-      fullName: 'Budi Santoso',
-      username: 'cashier_budi',
-      role: 'cashier',
-      pin: '1234',
-      station: 'Takeaway Counter',
-      status: 'active'
-    },
-    {
-      id: 'u4',
-      fullName: 'Admin Master',
-      username: 'admin_master',
-      role: 'admin',
-      pin: 'admin123',
-      station: 'Central Back Office',
-      status: 'active'
-    }
-  ];
-
   // Load from localStorage or initialize
   function loadMenuItems() {
     const raw = localStorage.getItem('retro_menu_items');
@@ -215,28 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStats();
   }
 
-  function loadUsers() {
-    const raw = localStorage.getItem('retro_staff_users');
-    if (raw) {
-      try {
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error('Failed to parse retro_staff_users', e);
-      }
-    }
-    localStorage.setItem('retro_staff_users', JSON.stringify(DEFAULT_USERS));
-    return [...DEFAULT_USERS];
-  }
-
-  function saveUsers(usersList) {
-    localStorage.setItem('retro_staff_users', JSON.stringify(usersList));
-    users = usersList;
-    renderUsersList();
-    updateStats();
-  }
-
   let menuItems = loadMenuItems();
-  let users = loadUsers();
+  let users = window.adminUsers || [];
 
   // Active state filters & search
   let activeMenuCategory = 'all';
@@ -307,8 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
       th_staff_name: 'Staff Member',
       th_staff_id: 'Staff ID / Username',
       th_role: 'Assigned Role',
-      th_station: 'Station / Shift',
-      th_status: 'Status',
       empty_dishes_title: 'No Dishes Found',
       empty_dishes_hint: 'Try adjusting your category filter or search keywords.',
       empty_users_title: 'No Staff Found',
@@ -317,9 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
       role_cashier: 'Cashier',
       role_head_cashier: 'Head Cashier',
       role_admin: 'Administrator',
-      status_active: 'Active',
-      status_leave: 'On Leave',
-      status_inactive: 'Inactive',
       btn_edit: 'Edit',
       btn_delete: 'Delete',
       btn_cancel: 'Cancel',
@@ -331,9 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
       modal_edit_dish_title: 'Edit Menu Dish',
       modal_edit_dish_sub: 'Update dish details, pricing, and inventory quantities.',
       modal_add_user_title: 'Add Cashier / Staff User',
-      modal_add_user_sub: 'Configure account credentials and terminal station permissions.',
+      modal_add_user_sub: 'Configure account credentials and role permissions.',
       modal_edit_user_title: 'Edit Staff Profile',
-      modal_edit_user_sub: 'Update credentials, station assignment, or account status.',
+      modal_edit_user_sub: 'Update account credentials and role permissions.',
       modal_delete_title: 'Confirm Deletion',
       modal_delete_sub: 'This action cannot be undone.',
       toast_dish_saved: 'Dish successfully saved!',
@@ -376,8 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
       th_staff_name: 'Nama Staf',
       th_staff_id: 'ID Staf / Username',
       th_role: 'Peran Jabatan',
-      th_station: 'Meja / Shift',
-      th_status: 'Status',
       empty_dishes_title: 'Menu Tidak Ditemukan',
       empty_dishes_hint: 'Sesuaikan filter kategori atau kata kunci pencarian.',
       empty_users_title: 'Staf Tidak Ditemukan',
@@ -386,9 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
       role_cashier: 'Kasir',
       role_head_cashier: 'Kepala Kasir',
       role_admin: 'Administrator',
-      status_active: 'Aktif',
-      status_leave: 'Cuti / Off',
-      status_inactive: 'Nonaktif',
       btn_edit: 'Ubah',
       btn_delete: 'Hapus',
       btn_cancel: 'Batal',
@@ -400,9 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
       modal_edit_dish_title: 'Ubah Menu Hidangan',
       modal_edit_dish_sub: 'Perbarui rincian, harga satuan, dan jumlah stok.',
       modal_add_user_title: 'Tambah Akun Kasir / Staf',
-      modal_add_user_sub: 'Atur kredensial akun dan izin stasiun kerja kasir.',
+      modal_add_user_sub: 'Atur kredensial akun dan izin peran.',
       modal_edit_user_title: 'Ubah Profil Staf Kasir',
-      modal_edit_user_sub: 'Perbarui informasi, stasiun tugas, atau status akun.',
+      modal_edit_user_sub: 'Perbarui kredensial akun dan izin peran.',
       modal_delete_title: 'Konfirmasi Penghapusan',
       modal_delete_sub: 'Tindakan ini tidak dapat dibatalkan.',
       toast_dish_saved: 'Menu hidangan berhasil disimpan!',
@@ -506,8 +437,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totalDishes = menuItems.length;
     const lowStockDishes = menuItems.filter((m) => m.stock <= 15).length;
-    const totalStaff = users.length;
-    const activeStaff = users.filter((u) => u.status === 'active').length;
+    const userRows = document.querySelectorAll('#tbody-users-list tr[data-user-role]');
+    const totalStaff = userRows.length;
+    const activeStaff = totalStaff;
 
     let totalValuation = 0;
     menuItems.forEach((m) => {
@@ -545,16 +477,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pillMinuman) pillMinuman.textContent = menuItems.filter((m) => m.category === 'minuman').length;
     if (pillSnack) pillSnack.textContent = menuItems.filter((m) => m.category === 'snack').length;
 
-    // Update Role Pill Badges
-    const pillRoleAll = document.getElementById('pill-count-role-all');
-    const pillRoleCashier = document.getElementById('pill-count-role-cashier');
-    const pillRoleHead = document.getElementById('pill-count-role-head');
-    const pillRoleAdmin = document.getElementById('pill-count-role-admin');
-
-    if (pillRoleAll) pillRoleAll.textContent = totalStaff;
-    if (pillRoleCashier) pillRoleCashier.textContent = users.filter((u) => u.role === 'cashier').length;
-    if (pillRoleHead) pillRoleHead.textContent = users.filter((u) => u.role === 'head_cashier').length;
-    if (pillRoleAdmin) pillRoleAdmin.textContent = users.filter((u) => u.role === 'admin').length;
+    // Update role badges from the database-backed table rows.
+    const rolePills = document.querySelectorAll('#section-users .filter-pill[data-role]');
+    rolePills.forEach((pill) => {
+      const role = pill.dataset.role;
+      const badge = pill.querySelector('.pill-badge');
+      if (badge) {
+        badge.textContent = role === 'all'
+          ? totalStaff
+          : document.querySelectorAll(`#tbody-users-list tr[data-user-role="${role}"]`).length;
+      }
+    });
 
     renderWatchlist();
   }
@@ -899,16 +832,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderUsersList() {
     if (!tbodyUsers) return;
-    tbodyUsers.innerHTML = '';
 
     const q = userSearchQuery.trim().toLowerCase();
-    const filtered = users.filter((user) => {
-      const matchRole = activeUserRole === 'all' || user.role === activeUserRole;
-      const matchSearch =
-        !q ||
-        (user.fullName && user.fullName.toLowerCase().includes(q)) ||
-        (user.username && user.username.toLowerCase().includes(q)) ||
-        (user.station && user.station.toLowerCase().includes(q));
+    const rows = [...tbodyUsers.querySelectorAll('tr[data-user-role]')];
+    const filtered = rows.filter((row) => {
+      const matchRole = activeUserRole === 'all' || row.dataset.userRole === activeUserRole;
+      const matchSearch = !q || (row.dataset.userSearch || '').includes(q);
+      row.style.display = matchRole && matchSearch ? '' : 'none';
       return matchRole && matchSearch;
     });
 
@@ -919,62 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (emptyUsersState) emptyUsersState.style.display = 'none';
 
-    filtered.forEach((user) => {
-      const tr = document.createElement('tr');
-      const initials = (user.fullName || 'User')
-        .split(' ')
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
-
-      const roleLabel = translations[currentLang][`role_${user.role}`] || user.role;
-      const statusLabel = translations[currentLang][`status_${user.status}`] || user.status;
-
-      tr.innerHTML = `
-        <td>
-          <div class="staff-avatar-cell">${initials}</div>
-        </td>
-        <td>
-          <div class="dish-cell-name">
-            <span class="dish-main-title">${user.fullName}</span>
-            <span class="dish-en-sub">PIN: ${user.pin ? '••••' : 'None'}</span>
-          </div>
-        </td>
-        <td>
-          <span class="dish-id-badge" style="font-size: 0.82rem; color: var(--brand-900); font-weight: 700;">${user.username}</span>
-        </td>
-        <td>
-          <span class="role-badge ${user.role}">${roleLabel}</span>
-        </td>
-        <td>
-          <span style="font-size: 0.8rem; color: var(--charcoal-700);">${user.station || 'Default Station'}</span>
-        </td>
-        <td>
-          <span class="status-indicator ${user.status}">
-            <span class="status-dot"></span>
-            <span>${statusLabel}</span>
-          </span>
-        </td>
-        <td>
-          <div class="action-buttons-cell">
-            <button type="button" class="btn-table-edit" data-id="${user.id}" title="${translations[currentLang].btn_edit}">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-              <span>${translations[currentLang].btn_edit}</span>
-            </button>
-            <button type="button" class="btn-table-delete" data-id="${user.id}" title="${translations[currentLang].btn_delete}">✕</button>
-          </div>
-        </td>
-      `;
-
-      tr.querySelector('.btn-table-edit').addEventListener('click', () => openEditUserModal(user.id));
-      tr.querySelector('.btn-table-delete').addEventListener('click', () => confirmDeleteUser(user.id));
-
-      tbodyUsers.appendChild(tr);
-    });
+    if (emptyUsersState) emptyUsersState.style.display = filtered.length === 0 ? 'block' : 'none';
   }
 
   // Role filter pills
@@ -1020,13 +895,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const userFormMode = document.getElementById('user-form-mode');
   const userFormId = document.getElementById('user-form-id');
   const modalUserTitle = document.getElementById('modal-user-title');
-  const inputUserFullName = document.getElementById('user-full-name');
   const inputUserUsername = document.getElementById('user-username');
   const selectUserRole = document.getElementById('user-role');
   const inputUserPin = document.getElementById('user-pin');
   const userPinReq = document.getElementById('user-pin-req');
-  const inputUserStation = document.getElementById('user-station');
-  const selectUserStatus = document.getElementById('user-status');
 
   function openAddUserModal() {
     if (!modalUserBackdrop) return;
@@ -1042,22 +914,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function openEditUserModal(userId) {
-    const user = users.find((u) => u.id === userId);
+    const user = users.find((u) => String(u.id) === String(userId));
     if (!user || !modalUserBackdrop) return;
 
     userFormMode.value = 'edit';
     userFormId.value = user.id;
     modalUserTitle.textContent = translations[currentLang].modal_edit_user_title;
 
-    inputUserFullName.value = user.fullName || '';
     inputUserUsername.value = user.username || '';
-    selectUserRole.value = user.role || 'cashier';
+    selectUserRole.value = user.role || '';
     inputUserPin.value = '';
     inputUserPin.required = false;
     if (userPinReq) userPinReq.style.display = 'none';
-    inputUserStation.value = user.station || '';
-    selectUserStatus.value = user.status || 'active';
-
     modalUserBackdrop.style.display = 'flex';
   }
 
@@ -1068,57 +936,47 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnOpenAddUser) btnOpenAddUser.addEventListener('click', openAddUserModal);
   if (btnCloseUserModal) btnCloseUserModal.addEventListener('click', closeUserModal);
   if (btnCancelUserModal) btnCancelUserModal.addEventListener('click', closeUserModal);
+  document.querySelectorAll('.btn-edit-user').forEach((button) => {
+    button.addEventListener('click', () => openEditUserModal(button.dataset.id));
+  });
+  document.querySelectorAll('.btn-delete-user').forEach((button) => {
+    button.addEventListener('click', () => confirmDeleteUser(button.dataset.id));
+  });
 
   // Save User Submit
   if (formUserModal) {
-    formUserModal.addEventListener('submit', (e) => {
+    formUserModal.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const mode = userFormMode.value;
       const targetId = userFormId.value;
 
-      const fullName = inputUserFullName.value.trim();
       const username = inputUserUsername.value.trim();
-      const role = selectUserRole.value;
+      const roleId = selectUserRole.value;
       const pin = inputUserPin.value.trim();
-      const station = inputUserStation.value.trim() || 'Front Desk Station';
-      const status = selectUserStatus.value;
 
-      if (!fullName || !username) {
-        alert('Please fill in both full name and staff username.');
+      if (!username) {
+        alert('Please fill in the staff username.');
         return;
       }
 
-      if (mode === 'add') {
-        if (!pin) {
-          alert('Please provide a PIN / Password for this cashier.');
-          return;
-        }
-        const newId = 'u' + Date.now().toString().slice(-4);
-        users.unshift({
-          id: newId,
-          fullName,
-          username,
-          role,
-          pin,
-          station,
-          status
-        });
-      } else {
-        const existing = users.find((u) => u.id === targetId);
-        if (existing) {
-          existing.fullName = fullName;
-          existing.username = username;
-          existing.role = role;
-          if (pin) existing.pin = pin; // only update if entered
-          existing.station = station;
-          existing.status = status;
-        }
+      if (mode === 'add' && !pin) {
+        alert('Please provide a PIN / Password for this cashier.');
+        return;
       }
 
-      saveUsers(users);
-      closeUserModal();
-      showToast(translations[currentLang].toast_user_saved, 'success');
+      const response = await fetch(`${window.baseUrl || ''}admin/users/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id_user: targetId, username, id_role: roleId, password: pin })
+      });
+
+      if (!response.ok) {
+        alert('User gagal disimpan.');
+        return;
+      }
+
+      window.location.reload();
     });
   }
 
@@ -1141,11 +999,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function confirmDeleteUser(userId) {
-    const user = users.find((u) => u.id === userId);
+    const user = users.find((u) => String(u.id) === String(userId));
     if (!user || !modalDeleteBackdrop) return;
     pendingDeleteType = 'user';
     pendingDeleteId = user.id;
-    if (deleteTargetPreview) deleteTargetPreview.textContent = `${user.fullName} (${user.username})`;
+    if (deleteTargetPreview) deleteTargetPreview.textContent = user.username;
     modalDeleteBackdrop.style.display = 'flex';
   }
 
@@ -1159,15 +1017,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnCancelDelete) btnCancelDelete.addEventListener('click', closeDeleteModal);
 
   if (btnConfirmDelete) {
-    btnConfirmDelete.addEventListener('click', () => {
+    btnConfirmDelete.addEventListener('click', async () => {
       if (pendingDeleteType === 'dish' && pendingDeleteId) {
         menuItems = menuItems.filter((m) => m.id !== pendingDeleteId);
         saveMenuItems(menuItems);
         showToast(translations[currentLang].toast_dish_deleted, 'success');
       } else if (pendingDeleteType === 'user' && pendingDeleteId) {
-        users = users.filter((u) => u.id !== pendingDeleteId);
-        saveUsers(users);
-        showToast(translations[currentLang].toast_user_deleted, 'success');
+        const response = await fetch(`${window.baseUrl || ''}admin/users/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ id_user: pendingDeleteId })
+        });
+        if (response.ok) window.location.reload();
       }
       closeDeleteModal();
     });
