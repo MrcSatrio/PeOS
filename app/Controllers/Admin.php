@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\userModel;
+use App\Models\UserModel;
 use App\Models\RoleModel;
 
 
